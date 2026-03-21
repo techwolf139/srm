@@ -2,7 +2,7 @@
 
 ## 系统概述
 
-本系统包含 **10个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。通过自然语言处理、工作流编排和数据抓取技术，实现企业职能部门的智能化升级。
+本系统包含 **11个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。通过自然语言处理、工作流编排和数据抓取技术，实现企业职能部门的智能化升级。
 
 ---
 
@@ -13,13 +13,14 @@
 | 1 | `ecommerce-procurement-research/` | **采购询价**（多平台比价） | keyword / URL | CSV + Markdown 价格报告 |
 | 2 | `procurement-requirement-parser/` | **需求解析**（采购前） | 非结构化文本 | 结构化 BOM |
 | 3 | `supplier-risk-assessor/` | **供应商风控**（采购中） | 供应商名称 / CSV | 风险评估报告 |
-| 4 | `contract-manager/` | **合同管理与审核**（采购后） | 采购信息 / 合同文本 | 合同草稿 / 审核报告 |
-| 5 | `invoice-matcher/` | **三单匹配**（采购后） | 采购单 + 收货单 + 发票 | 匹配报告 |
-| 6 | `talent-salary-researcher/` | **人才招聘**（HR） | JD / 职位要求 | 薪酬对标报告 |
-| 7 | `competitor-monitor/` | **竞品监测**（市场） | 竞品关键词 | 舆情分析周报 |
-| 8 | `ip-infringement-scanner/` | **侵权巡检**（法务） | 品牌 / 商标信息 | 侵权证据报告 |
-| 9 | `im-bot-gateway/` | **IM集成**（基础设施） | IM 消息 | 技能路由 + 响应 |
-| 10 | `web-reader/` | **网页阅读**（基础设施） | URL | Markdown 内容 |
+| 4 | `contract-generator/` | **合同生成**（采购后） | 采购信息 | 合同草稿 |
+| 5 | `contract-audit/` | **合同审核**（采购后） | 合同文本 | 审核报告 |
+| 6 | `invoice-matcher/` | **三单匹配**（采购后） | 采购单 + 收货单 + 发票 | 匹配报告 |
+| 7 | `talent-salary-researcher/` | **人才招聘**（HR） | JD / 职位要求 | 薪酬对标报告 |
+| 8 | `competitor-monitor/` | **竞品监测**（市场） | 竞品关键词 | 舆情分析周报 |
+| 9 | `ip-infringement-scanner/` | **侵权巡检**（法务） | 品牌 / 商标信息 | 侵权证据报告 |
+| 10 | `im-bot-gateway/` | **IM集成**（基础设施） | IM 消息 | 技能路由 + 响应 |
+| 11 | `web-reader/` | **网页阅读**（基础设施） | URL | Markdown 内容 |
 
 ---
 
@@ -118,16 +119,11 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 
 ---
 
-### 4. contract-manager（合同管理与审核）
+### 4. contract-generator（合同生成）
 
-**职能：** 生成采购合同 + 审核合同条款
+**职能：** 根据采购信息填充标准模板，自动生成完整合同文本
 
-本技能包含两个核心子功能：
-
-#### 4.1 合同自动生成
-
-根据采购信息填充标准模板，自动生成完整合同文本：
-
+**输入 → 输出：**
 ```
 采购信息 → 合同各条款自动填充 → Markdown/DOCX
 ```
@@ -144,10 +140,18 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 | `delivery_date` | 交付日期 |
 | `warranty_period` | 质保期 |
 
-#### 4.2 合同条款审核（Contract Audit）
+**适用场景：**
+- 采购询价完成后，生成正式采购合同
+- 根据 BOM 清单自动填充物品明细
+- 合同编号自动生成（日期+序号）
 
-对企业提供的合同进行红队分析，识别风险点：
+---
 
+### 5. contract-audit（合同审核）
+
+**职能：** 对企业提供的合同进行红队分析，识别风险点
+
+**输入 → 输出：**
 ```
 合同文本 → 条款提取 → 风险点识别 → 修改建议
 ```
@@ -199,9 +203,14 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 }
 ```
 
+**与合同生成的协作：**
+```
+contract-generator → 合同草稿 → contract-audit → 审核报告 → Human Approval → 签署
+```
+
 ---
 
-### 5. invoice-matcher（三单匹配）
+### 6. invoice-matcher（三单匹配）
 
 **职能：** 核对采购单、收货单、发票一致性
 
@@ -236,7 +245,7 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 
 ---
 
-### 6. talent-salary-researcher（人才招聘）
+### 7. talent-salary-researcher（人才招聘）
 
 **职能：** JD解析 + 候选人筛选 + 薪酬对标
 
@@ -264,7 +273,7 @@ level_factors = {
 
 ---
 
-### 7. competitor-monitor（竞品监测）
+### 8. competitor-monitor（竞品监测）
 
 **职能：** 监控竞品在小红书/抖音/微博的产品宣发、价格、舆情
 
@@ -289,7 +298,7 @@ level_factors = {
 
 ---
 
-### 8. ip-infringement-scanner（侵权巡检）
+### 9. ip-infringement-scanner（侵权巡检）
 
 **职能：** 电商平台商标/外观侵权检测
 
@@ -319,7 +328,7 @@ level_factors = {
 
 ---
 
-### 9. im-bot-gateway（IM集成）
+### 10. im-bot-gateway（IM集成）
 
 **职能：** 企业 IM 消息路由 + 技能调度
 
@@ -331,8 +340,8 @@ level_factors = {
 |----------|----------|------|
 | 询价 "iPhone 15手机壳" | `ecommerce-procurement-research` | 多平台比价 |
 | 供应商风控 "xxx公司" | `supplier-risk-assessor` | 风险评估 |
-| 合同审核 | `contract-manager` | 条款审核 |
-| 合同生成 | `contract-manager` | 模板填充 |
+| 合同审核 | `contract-audit` | 条款审核 |
+| 合同生成 | `contract-generator` | 模板填充 |
 | 发票报销 | `invoice-matcher` | 三单匹配 |
 | 人才招聘 "Python开发" | `talent-salary-researcher` | 薪酬对标 |
 | 竞品监控 | `competitor-monitor` | 舆情分析 |
@@ -342,7 +351,7 @@ level_factors = {
 
 ---
 
-### 10. web-reader（网页阅读）
+### 11. web-reader（网页阅读）
 
 **职能：** 使用 Jina Reader API 将任意 URL 转换为 LLM 友好的 Markdown 格式
 
@@ -418,8 +427,9 @@ digraph procurement_lifecycle {
     "需求录入" -> "procurement-requirement-parser" [label="非结构化文本"];
     "procurement-requirement-parser" -> "ecommerce-procurement-research" [label="keyword + BOM"];
     "ecommerce-procurement-research" -> "supplier-risk-assessor" [label="CSV(含供应商)"];
-    "supplier-risk-assessor" -> "contract-manager" [label="选定供应商"];
-    "contract-manager" -> "Human Approval" [label="合同签署"];
+    "supplier-risk-assessor" -> "contract-generator" [label="选定供应商"];
+    "contract-generator" -> "contract-audit" [label="合同草稿"];
+    "contract-audit" -> "Human Approval" [label="合同签署"];
     "Human Approval" -> "invoice-matcher" [label="收货+发票"];
     "invoice-matcher" -> "Human Approval" [label="付款审批"];
 }
@@ -468,9 +478,10 @@ digraph cross_department {
 |--------|----------|------------|
 | `procurement-requirement-parser` | `ecommerce-procurement-research` | - |
 | `ecommerce-procurement-research` | `supplier-risk-assessor` | `procurement-requirement-parser`, `asset-maintenance-tracker` |
-| `supplier-risk-assessor` | `contract-manager` | `ecommerce-procurement-research` |
-| `contract-manager` | - | `supplier-risk-assessor` |
-| `invoice-matcher` | - | `contract-manager` (间接) |
+| `supplier-risk-assessor` | `contract-generator` | `ecommerce-procurement-research` |
+| `contract-generator` | `contract-audit` | `supplier-risk-assessor` |
+| `contract-audit` | - | `contract-generator` |
+| `invoice-matcher` | - | `contract-audit` (间接) |
 | `im-bot-gateway` | 所有技能 | - |
 
 ### 数据流向
@@ -484,7 +495,9 @@ ecommerce-procurement-research → CSV (比价结果)
     ↓
 supplier-risk-assessor → 风险报告 (LOW/MEDIUM/HIGH)
     ↓
-contract-manager → 合同草稿 / 审核报告
+contract-generator → 合同草稿
+    ↓
+contract-audit → 审核报告 (HIGH/MEDIUM/LOW)
     ↓
 Human Approval → 签署合同
     ↓
@@ -553,7 +566,7 @@ Human Approval → 付款
 6. 对接企业微信/飞书审批流
 
 ### 阶段三：全流程自动化（2-3个月）
-7. 接入 `contract-manager` 合同生成与审核
+7. 接入 `contract-generator` 合同生成 + `contract-audit` 合同审核
 8. 接入 `invoice-matcher` 三单匹配
 9. 配置人类在环审批节点
 10. 部署横向扩展技能（HR、法务、市场）

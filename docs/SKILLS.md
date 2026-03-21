@@ -2,7 +2,7 @@
 
 ## 系统概述
 
-本系统包含 **9个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。通过自然语言处理、工作流编排和数据抓取技术，实现企业职能部门的智能化升级。
+本系统包含 **10个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。通过自然语言处理、工作流编排和数据抓取技术，实现企业职能部门的智能化升级。
 
 ---
 
@@ -19,6 +19,7 @@
 | 7 | `competitor-monitor/` | **竞品监测**（市场） | 竞品关键词 | 舆情分析周报 |
 | 8 | `ip-infringement-scanner/` | **侵权巡检**（法务） | 品牌 / 商标信息 | 侵权证据报告 |
 | 9 | `im-bot-gateway/` | **IM集成**（基础设施） | IM 消息 | 技能路由 + 响应 |
+| 10 | `web-reader/` | **网页阅读**（基础设施） | URL | Markdown 内容 |
 
 ---
 
@@ -341,6 +342,70 @@ level_factors = {
 
 ---
 
+### 10. web-reader（网页阅读）
+
+**职能：** 使用 Jina Reader API 将任意 URL 转换为 LLM 友好的 Markdown 格式
+
+**API 端点：**
+```
+https://r.jina.ai/{目标URL}
+```
+
+**基础用法：**
+
+| 调用方式 | 示例 |
+|----------|------|
+| URL 前缀 | `https://r.jina.ai/https://example.com` |
+| API 调用 | `curl https://r.jina.ai/https://example.com` |
+
+**Python 调用：**
+
+```python
+from web_reader import read_url, read_url_json
+
+# Markdown 格式返回
+content = read_url("https://tianchi.aliyun.com/forum/post/1001440")
+
+# JSON 格式返回（包含标题、时间戳）
+page = read_url_json("https://example.com")
+print(page.title, page.content)
+```
+
+**返回格式：**
+
+| 格式 | 说明 |
+|------|------|
+| Markdown（默认） | 干净的文本，自动去除广告、导航栏 |
+| JSON | 包含 url、title、content、timestamp 字段 |
+
+**限流说明：**
+
+| 方案 | RPM | 说明 |
+|------|-----|------|
+| 无 API Key | 20 RPM | 适合个人使用 |
+| 免费 API Key | 500 RPM | 注册获取 |
+| 付费 API Key | 5000 RPM | 高频使用 |
+
+**Jina Reader vs Playwright 对比：**
+
+| 特性 | Jina Reader | Playwright |
+|------|-------------|------------|
+| 速度 | 快 | 慢 |
+| JavaScript 执行 | 不支持 | 支持 |
+| 登录页面 | 不支持 | 支持 |
+| 内容质量 | 好（去除噪声） | 原始 HTML |
+| 适用场景 | 内容阅读、RAG | 动态网页、交互 |
+
+**常见中文内容源支持：**
+
+- 知乎文章
+- 天池论坛帖子
+- 微信公众号文章
+- 阿里云文档
+- 各种技术博客和新闻网站
+
+---
+
 ## 智能体协作流程
 
 ### 采购全生命周期流程
@@ -441,6 +506,7 @@ Human Approval → 付款
 | `ip-infringement-scanner` | 品牌保护、假货打击 |
 | `asset-maintenance-tracker` | IT资产盘点、维保到期提醒 |
 | `im-bot-gateway` | IM机器人对话入口 |
+| `web-reader` | 网页内容提取、RAG数据准备 |
 
 ---
 
@@ -462,7 +528,7 @@ Human Approval → 付款
 
 | 类别 | 技术选型 |
 |------|----------|
-| **数据抓取** | Playwright（网页自动化） |
+| **数据抓取** | Playwright（网页自动化）、Jina Reader API（轻量级网页读取） |
 | **数据处理** | Pandas（数据分析） |
 | **OCR识别** | 百度OCR / 腾讯OCR / 阿里云OCR |
 | **LLM调用** | OpenAI API / 国内模型（GLM、Qwen等） |
@@ -470,6 +536,7 @@ Human Approval → 付款
 | **企业集成** | 飞书SDK、企业微信SDK、钉钉SDK |
 | **国内数据源** | 天眼查API、企查查API、裁判文书网 |
 | **发票查验** | 国家税务总局发票查验平台 |
+| **网页内容提取** | Jina Reader API（r.jina.ai） |
 
 ---
 

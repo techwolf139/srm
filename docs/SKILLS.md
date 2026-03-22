@@ -2,7 +2,7 @@
 
 ## 系统概述
 
-本系统包含 **11个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。通过自然语言处理、工作流编排和数据抓取技术，实现企业职能部门的智能化升级。
+本系统包含 **12个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。通过自然语言处理、工作流编排和数据抓取技术，实现企业职能部门的智能化升级。
 
 ---
 
@@ -10,23 +10,23 @@
 
 | # | 技能目录 | 职能 | 输入 | 输出 |
 |---|----------|------|------|------|
-| 1 | `ecommerce-procurement-research/` | **采购询价**（多平台比价） | keyword / URL | CSV + Markdown 价格报告 |
-| 2 | `procurement-requirement-parser/` | **需求解析**（采购前） | 非结构化文本 | 结构化 BOM |
-| 3 | `supplier-risk-assessor/` | **供应商风控**（采购中） | 供应商名称 / CSV | 风险评估报告 |
-| 4 | `contract-generator/` | **合同生成**（采购后） | 采购信息 | 合同草稿 |
-| 5 | `contract-audit/` | **合同审核**（采购后） | 合同文本 | 审核报告 |
-| 6 | `invoice-matcher/` | **三单匹配**（采购后） | 采购单 + 收货单 + 发票 | 匹配报告 |
-| 7 | `talent-salary-researcher/` | **人才招聘**（HR） | JD / 职位要求 | 薪酬对标报告 |
-| 8 | `competitor-monitor/` | **竞品监测**（市场） | 竞品关键词 | 舆情分析周报 |
-| 9 | `ip-infringement-scanner/` | **侵权巡检**（法务） | 品牌 / 商标信息 | 侵权证据报告 |
-| 10 | `im-bot-gateway/` | **IM集成**（基础设施） | IM 消息 | 技能路由 + 响应 |
-| 11 | `web-reader/` | **网页阅读**（基础设施） | URL | Markdown 内容 |
+| 1 | `skills/srm-ecommerce-procurement-research/` | **采购询价**（多平台比价） | keyword / URL | CSV + Markdown 价格报告 |
+| 2 | `skills/srm-procurement-requirement-parser/` | **需求解析**（采购前） | 非结构化文本 | 结构化 BOM |
+| 3 | `skills/srm-supplier-risk-assessor/` | **供应商风控**（采购中） | 供应商名称 / CSV | 风险评估报告 |
+| 4 | `skills/srm-contract-generator/` | **合同生成**（采购后） | 采购信息 | 合同草稿 |
+| 5 | `skills/srm-contract-audit/` | **合同审核**（采购后） | 合同文本 | 审核报告 |
+| 6 | `skills/srm-invoice-matcher/` | **三单匹配**（采购后） | 采购单 + 收货单 + 发票 | 匹配报告 |
+| 7 | `skills/srm-talent-salary-researcher/` | **人才招聘**（HR） | JD / 职位要求 | 薪酬对标报告 |
+| 8 | `skills/srm-competitor-monitor/` | **竞品监测**（市场） | 竞品关键词 | 舆情分析周报 |
+| 9 | `skills/srm-ip-infringement-scanner/` | **侵权巡检**（法务） | 品牌 / 商标信息 | 侵权证据报告 |
+| 10 | `skills/srm-im-bot-gateway/` | **IM集成**（基础设施） | IM 消息 | 技能路由 + 响应 |
+| 11 | `skills/srm-web-reader/` | **网页阅读**（基础设施） | URL | Markdown 内容 |
 
 ---
 
 ## 技能详解
 
-### 1. procurement-requirement-parser（需求解析）
+### 1. srm-procurement-requirement-parser（需求解析）
 
 **职能：** 将非结构化文本（聊天记录、邮件）转为结构化 BOM
 
@@ -54,7 +54,7 @@
 
 ---
 
-### 2. ecommerce-procurement-research（采购询价）
+### 2. srm-ecommerce-procurement-research（采购询价）
 
 **职能：** 多平台（淘宝/京东/拼多多/1688）商品数据抓取与比价
 
@@ -70,7 +70,7 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 
 ---
 
-### 3. supplier-risk-assessor（供应商风控）
+### 3. srm-supplier-risk-assessor（供应商风控）
 
 **职能：** 查询天眼查/企查查等数据源，评估供应商风险
 
@@ -119,7 +119,7 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 
 ---
 
-### 4. contract-generator（合同生成）
+### 4. srm-contract-generator（合同生成）
 
 **职能：** 根据采购信息填充标准模板，自动生成完整合同文本
 
@@ -147,7 +147,7 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 
 ---
 
-### 5. contract-audit（合同审核）
+### 5. srm-contract-audit（合同审核）
 
 **职能：** 对企业提供的合同进行红队分析，识别风险点
 
@@ -205,12 +205,12 @@ rank,product_name,price,rating,sales_volume,platform,source_url
 
 **与合同生成的协作：**
 ```
-contract-generator → 合同草稿 → contract-audit → 审核报告 → Human Approval → 签署
+srm-contract-generator → 合同草稿 → srm-contract-audit → 审核报告 → Human Approval → 签署
 ```
 
 ---
 
-### 6. invoice-matcher（三单匹配）
+### 6. srm-invoice-matcher（三单匹配）
 
 **职能：** 核对采购单、收货单、发票一致性
 
@@ -245,7 +245,7 @@ contract-generator → 合同草稿 → contract-audit → 审核报告 → Huma
 
 ---
 
-### 7. talent-salary-researcher（人才招聘）
+### 7. srm-talent-salary-researcher（人才招聘）
 
 **职能：** JD解析 + 候选人筛选 + 薪酬对标
 
@@ -273,7 +273,7 @@ level_factors = {
 
 ---
 
-### 8. competitor-monitor（竞品监测）
+### 8. srm-competitor-monitor（竞品监测）
 
 **职能：** 监控竞品在小红书/抖音/微博的产品宣发、价格、舆情
 
@@ -298,7 +298,7 @@ level_factors = {
 
 ---
 
-### 9. ip-infringement-scanner（侵权巡检）
+### 9. srm-ip-infringement-scanner（侵权巡检）
 
 **职能：** 电商平台商标/外观侵权检测
 
@@ -328,7 +328,7 @@ level_factors = {
 
 ---
 
-### 10. im-bot-gateway（IM集成）
+### 10. srm-im-bot-gateway（IM集成）
 
 **职能：** 企业 IM 消息路由 + 技能调度
 
@@ -338,20 +338,19 @@ level_factors = {
 
 | 命令示例 | 触发技能 | 说明 |
 |----------|----------|------|
-| 询价 "iPhone 15手机壳" | `ecommerce-procurement-research` | 多平台比价 |
-| 供应商风控 "xxx公司" | `supplier-risk-assessor` | 风险评估 |
-| 合同审核 | `contract-audit` | 条款审核 |
-| 合同生成 | `contract-generator` | 模板填充 |
-| 发票报销 | `invoice-matcher` | 三单匹配 |
-| 人才招聘 "Python开发" | `talent-salary-researcher` | 薪酬对标 |
-| 竞品监控 | `competitor-monitor` | 舆情分析 |
-| 侵权巡检 | `ip-infringement-scanner` | 侵权检测 |
-| 资产维保 | `asset-maintenance-tracker` | 设备管理 |
-| 帮助 | `im-bot-gateway` | 技能说明 |
+| 询价 "iPhone 15手机壳" | `srm-ecommerce-procurement-research` | 多平台比价 |
+| 供应商风控 "xxx公司" | `srm-supplier-risk-assessor` | 风险评估 |
+| 合同审核 | `srm-contract-audit` | 条款审核 |
+| 合同生成 | `srm-contract-generator` | 模板填充 |
+| 发票报销 | `srm-invoice-matcher` | 三单匹配 |
+| 人才招聘 "Python开发" | `srm-talent-salary-researcher` | 薪酬对标 |
+| 竞品监控 | `srm-competitor-monitor` | 舆情分析 |
+| 侵权巡检 | `srm-ip-infringement-scanner` | 侵权检测 |
+| 帮助 | `srm-im-bot-gateway` | 技能说明 |
 
 ---
 
-### 11. web-reader（网页阅读）
+### 11. srm-web-reader（网页阅读）
 
 **职能：** 使用 Jina Reader API 将任意 URL 转换为 LLM 友好的 Markdown 格式
 
@@ -424,14 +423,14 @@ digraph procurement_lifecycle {
     rankdir=LR;
     node [shape=box];
     
-    "需求录入" -> "procurement-requirement-parser" [label="非结构化文本"];
-    "procurement-requirement-parser" -> "ecommerce-procurement-research" [label="keyword + BOM"];
-    "ecommerce-procurement-research" -> "supplier-risk-assessor" [label="CSV(含供应商)"];
-    "supplier-risk-assessor" -> "contract-generator" [label="选定供应商"];
-    "contract-generator" -> "contract-audit" [label="合同草稿"];
-    "contract-audit" -> "Human Approval" [label="合同签署"];
-    "Human Approval" -> "invoice-matcher" [label="收货+发票"];
-    "invoice-matcher" -> "Human Approval" [label="付款审批"];
+    "需求录入" -> "srm-procurement-requirement-parser" [label="非结构化文本"];
+    "srm-procurement-requirement-parser" -> "srm-ecommerce-procurement-research" [label="keyword + BOM"];
+    "srm-ecommerce-procurement-research" -> "srm-supplier-risk-assessor" [label="CSV(含供应商)"];
+    "srm-supplier-risk-assessor" -> "srm-contract-generator" [label="选定供应商"];
+    "srm-contract-generator" -> "srm-contract-audit" [label="合同草稿"];
+    "srm-contract-audit" -> "Human Approval" [label="合同签署"];
+    "Human Approval" -> "srm-invoice-matcher" [label="收货+发票"];
+    "srm-invoice-matcher" -> "Human Approval" [label="付款审批"];
 }
 ```
 
@@ -458,13 +457,13 @@ digraph contract_audit {
 digraph cross_department {
     rankdir=TB;
     
-    "HR部门" -> "talent-salary-researcher" [label="招聘需求"];
-    "市场部门" -> "competitor-monitor" [label="竞品监控"];
-    "法务部门" -> "ip-infringement-scanner" [label="侵权巡检"];
-    "IT/行政部门" -> "asset-maintenance-tracker" [label="资产管理"];
-    "IT/行政部门" -> "ecommerce-procurement-research" [label="设备采购"];
+    "HR部门" -> "srm-talent-salary-researcher" [label="招聘需求"];
+    "市场部门" -> "srm-competitor-monitor" [label="竞品监控"];
+    "法务部门" -> "srm-ip-infringement-scanner" [label="侵权巡检"];
+    "IT/行政部门" -> "srm-asset-maintenance-tracker" [label="资产管理"];
+    "IT/行政部门" -> "srm-ecommerce-procurement-research" [label="设备采购"];
     
-    "procurement-requirement-parser" -> "ecommerce-procurement-research" [label="采购需求"];
+    "srm-procurement-requirement-parser" -> "srm-ecommerce-procurement-research" [label="采购需求"];
 }
 ```
 
@@ -476,32 +475,32 @@ digraph cross_department {
 
 | 智能体 | 下游调用 | 被上游调用 |
 |--------|----------|------------|
-| `procurement-requirement-parser` | `ecommerce-procurement-research` | - |
-| `ecommerce-procurement-research` | `supplier-risk-assessor` | `procurement-requirement-parser`, `asset-maintenance-tracker` |
-| `supplier-risk-assessor` | `contract-generator` | `ecommerce-procurement-research` |
-| `contract-generator` | `contract-audit` | `supplier-risk-assessor` |
-| `contract-audit` | - | `contract-generator` |
-| `invoice-matcher` | - | `contract-audit` (间接) |
-| `im-bot-gateway` | 所有技能 | - |
+| `srm-procurement-requirement-parser` | `srm-ecommerce-procurement-research` | - |
+| `srm-ecommerce-procurement-research` | `srm-supplier-risk-assessor` | `srm-procurement-requirement-parser`, `srm-asset-maintenance-tracker` |
+| `srm-supplier-risk-assessor` | `srm-contract-generator` | `srm-ecommerce-procurement-research` |
+| `srm-contract-generator` | `srm-contract-audit` | `srm-supplier-risk-assessor` |
+| `srm-contract-audit` | - | `srm-contract-generator` |
+| `srm-invoice-matcher` | - | `srm-contract-audit` (间接) |
+| `srm-im-bot-gateway` | 所有技能 | - |
 
 ### 数据流向
 
 ```
 非结构化文本
     ↓
-procurement-requirement-parser → BOM (结构化需求)
+srm-procurement-requirement-parser → BOM (结构化需求)
     ↓
-ecommerce-procurement-research → CSV (比价结果)
+srm-ecommerce-procurement-research → CSV (比价结果)
     ↓
-supplier-risk-assessor → 风险报告 (LOW/MEDIUM/HIGH)
+srm-supplier-risk-assessor → 风险报告 (LOW/MEDIUM/HIGH)
     ↓
-contract-generator → 合同草稿
+srm-contract-generator → 合同草稿
     ↓
-contract-audit → 审核报告 (HIGH/MEDIUM/LOW)
+srm-contract-audit → 审核报告 (HIGH/MEDIUM/LOW)
     ↓
 Human Approval → 签署合同
     ↓
-invoice-matcher → 三单匹配报告
+srm-invoice-matcher → 三单匹配报告
     ↓
 Human Approval → 付款
 ```
@@ -514,12 +513,12 @@ Human Approval → 付款
 
 | 技能 | 独立场景 |
 |------|----------|
-| `talent-salary-researcher` | 招聘季、薪酬调整 |
-| `competitor-monitor` | 竞品分析周报 |
-| `ip-infringement-scanner` | 品牌保护、假货打击 |
-| `asset-maintenance-tracker` | IT资产盘点、维保到期提醒 |
-| `im-bot-gateway` | IM机器人对话入口 |
-| `web-reader` | 网页内容提取、RAG数据准备 |
+| `srm-talent-salary-researcher` | 招聘季、薪酬调整 |
+| `srm-competitor-monitor` | 竞品分析周报 |
+| `srm-ip-infringement-scanner` | 品牌保护、假货打击 |
+| `srm-asset-maintenance-tracker` | IT资产盘点、维保到期提醒 |
+| `srm-im-bot-gateway` | IM机器人对话入口 |
+| `srm-web-reader` | 网页内容提取、RAG数据准备 |
 
 ---
 
@@ -556,18 +555,18 @@ Human Approval → 付款
 ## 实施建议
 
 ### 阶段一：快速见效（1-2周）
-1. 部署 `im-bot-gateway` 到群聊
+1. 部署 `srm-im-bot-gateway` 到群聊
 2. 业务部门可直接 @机器人 询价
 3. 验证意图路由准确性
 
 ### 阶段二：采购闭环（1个月）
-4. 打通 `procurement-requirement-parser` → `ecommerce-procurement-research`
-5. 增加 `supplier-risk-assessor` 风控环节
+4. 打通 `srm-procurement-requirement-parser` → `srm-ecommerce-procurement-research`
+5. 增加 `srm-supplier-risk-assessor` 风控环节
 6. 对接企业微信/飞书审批流
 
 ### 阶段三：全流程自动化（2-3个月）
-7. 接入 `contract-generator` 合同生成 + `contract-audit` 合同审核
-8. 接入 `invoice-matcher` 三单匹配
+7. 接入 `srm-contract-generator` 合同生成 + `srm-contract-audit` 合同审核
+8. 接入 `srm-invoice-matcher` 三单匹配
 9. 配置人类在环审批节点
 10. 部署横向扩展技能（HR、法务、市场）
 

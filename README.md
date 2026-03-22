@@ -568,18 +568,18 @@ IM机器人(@询价) → 多平台比价 → 轻量风控 → 快速合同 → I
 
 | # | 技能目录 | 职能 |
 |---|----------|------|
-| 1 | `ecommerce-procurement-research/` | 采购询价（多平台比价） |
-| 2 | `procurement-requirement-parser/` | 需求解析（采购前） |
-| 3 | `supplier-risk-assessor/` | 供应商风控（采购中） |
-| 4 | `contract-generator/` | 合同生成（采购后） |
-| 5 | `contract-audit/` | 合同审核（采购后） |
-| 6 | `invoice-matcher/` | 三单匹配（采购后） |
-| 7 | `talent-salary-researcher/` | 人才招聘（HR） |
-| 8 | `competitor-monitor/` | 竞品监测（市场） |
-| 9 | `ip-infringement-scanner/` | 侵权巡检（法务） |
-| 10 | `im-bot-gateway/` | IM集成（基础设施） |
-| 11 | `web-reader/` | 网页阅读（基础设施） |
-| 12 | `asset-maintenance-tracker/` | 资产维保（IT） |
+| 1 | `skills/srm-ecommerce-procurement-research/` | 采购询价（多平台比价） |
+| 2 | `skills/srm-procurement-requirement-parser/` | 需求解析（采购前） |
+| 3 | `skills/srm-supplier-risk-assessor/` | 供应商风控（采购中） |
+| 4 | `skills/srm-contract-generator/` | 合同生成（采购后） |
+| 5 | `skills/srm-contract-audit/` | 合同审核（采购后） |
+| 6 | `skills/srm-invoice-matcher/` | 三单匹配（采购后） |
+| 7 | `skills/srm-talent-salary-researcher/` | 人才招聘（HR） |
+| 8 | `skills/srm-competitor-monitor/` | 竞品监测（市场） |
+| 9 | `skills/srm-ip-infringement-scanner/` | 侵权巡检（法务） |
+| 10 | `skills/srm-im-bot-gateway/` | IM集成（基础设施） |
+| 11 | `skills/srm-web-reader/` | 网页阅读（基础设施） |
+| 12 | `skills/srm-asset-maintenance-tracker/` | 资产维保（IT） |
 
 详细技能说明请参考 [docs/SKILLS.md](docs/SKILLS.md)
 

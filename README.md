@@ -2,6 +2,235 @@
 
 > 从采购全生命周期视角，讲述如何配置业务流程实现采购智能化
 
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+
+---
+
+## 📋 项目概览
+
+SRM（Supplier Relationship Management）智能体系统是一个面向中国企业采购场景的智能自动化解决方案。系统包含 **12个智能体技能**，覆盖采购全生命周期（采购前→采购中→采购后）以及跨部门横向扩展场景。
+
+### 核心能力
+- **AI驱动**：基于LLM的自然语言理解和流程编排
+- **全流程覆盖**：从需求解析到付款审批的完整闭环
+- **国内适配**：符合中国法律法规和商业惯例
+- **多部门协作**：采购、HR、法务、市场、IT等多职能支持
+
+---
+
+## 🚀 快速开始
+
+### 环境要求
+- Python 3.10+
+- Playwright（数据抓取）
+- OpenAI API Key 或国内大模型API
+
+### 安装依赖
+
+```bash
+# 克隆仓库
+git clone <repository-url>
+cd srm
+
+# 安装Python依赖
+pip install -r requirements.txt
+
+# 安装Playwright浏览器
+playwright install
+
+# 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，填入API密钥
+```
+
+### 使用单个技能
+
+```python
+# 示例：使用电商采购研究技能
+from skills.srm_ecommerce_procurement_research import EcommerceResearcher
+
+researcher = EcommerceResearcher()
+results = researcher.research("机械键盘", platforms=["jd", "taobao"])
+print(results.to_markdown())
+```
+
+### 运行完整流程
+
+```python
+# 采购全生命周期示例
+from skills import (
+    ProcurementRequirementParser,
+    EcommerceResearcher,
+    SupplierRiskAssessor,
+    ContractGenerator,
+    ContractAuditor,
+    InvoiceMatcher
+)
+
+# 1. 解析需求
+parser = ProcurementRequirementParser()
+bom = parser.parse("给研发部买10台机械键盘，预算5000以内")
+
+# 2. 多平台比价
+researcher = EcommerceResearcher()
+price_report = researcher.research_from_bom(bom)
+
+# 3. 供应商风控
+assessor = SupplierRiskAssessor()
+risk_report = assessor.assess(price_report.suppliers)
+
+# ... 继续后续流程
+```
+
+---
+
+## 📁 项目结构
+
+```
+srm/
+├── skills/                          # 智能体技能目录
+│   ├── srm-procurement-requirement-parser/    # 需求解析
+│   ├── srm-ecommerce-procurement-research/    # 电商采购研究
+│   ├── srm-supplier-risk-assessor/            # 供应商风控
+│   ├── srm-contract-generator/                # 合同生成
+│   ├── srm-contract-audit/                    # 合同审核
+│   ├── srm-invoice-matcher/                   # 三单匹配
+│   ├── srm-talent-salary-researcher/          # 人才薪酬研究
+│   ├── srm-competitor-monitor/                # 竞品监测
+│   ├── srm-ip-infringement-scanner/           # 侵权巡检
+│   ├── srm-im-bot-gateway/                    # IM机器人网关
+│   ├── srm-web-reader/                        # 网页阅读
+│   └── srm-asset-maintenance-tracker/         # 资产维保
+├── docs/                            # 文档目录
+│   ├── SKILLS.md                   # 技能详细说明
+│   └── concept.md                  # 概念设计文档
+├── logs/                            # 日志目录
+├── README.md                        # 项目说明
+└── .env.example                     # 环境变量示例
+```
+
+### 技能目录命名规范
+
+所有技能遵循统一的命名规范：`srm-{function}-{subfunction}`
+
+- `srm-`：项目前缀
+- `{function}`：职能领域（procurement/talent/competitor/ip/asset）
+- `{subfunction}`：具体功能（research/assess/generate/audit/match）
+
+---
+
+## 🤖 智能体调用系统（Agent Calling System）
+
+### 面向AI智能体的调用接口
+
+本系统为AI智能体提供了标准化的调用接口，支持自然语言意图识别和技能路由。
+
+#### 1. 技能发现（Skill Discovery）
+
+每个技能目录包含 `SKILL.md` 文件，遵循 OpenCode Skill Protocol：
+
+```yaml
+name: ecommerce-procurement-research
+description: Use when researching product prices from Chinese e-commerce platforms (Taobao, JD, PDD, 1688)
+
+parameters:
+  keyword:
+    type: string
+    description: Product name or search keyword
+    required: true
+  platforms:
+    type: array
+    description: Platforms to search
+    enum: [taobao, jd, pdd, "1688"]
+    default: [jd, taobao]
+  
+output:
+  format: markdown
+  schema: |
+    | rank | product_name | price | rating | platform |
+    |------|--------------|-------|--------|----------|
+```
+
+#### 2. 意图路由（Intent Routing）
+
+```python
+# IM机器人网关自动路由用户意图到对应技能
+INTENT_ROUTING_TABLE = {
+    "询价": "srm-ecommerce-procurement-research",
+    "比价": "srm-ecommerce-procurement-research",
+    "供应商风控": "srm-supplier-risk-assessor",
+    "查公司": "srm-supplier-risk-assessor",
+    "生成合同": "srm-contract-generator",
+    "审核合同": "srm-contract-audit",
+    "发票匹配": "srm-invoice-matcher",
+    "招聘": "srm-talent-salary-researcher",
+    "竞品监控": "srm-competitor-monitor",
+    "侵权检测": "srm-ip-infringement-scanner",
+    "读网页": "srm-web-reader",
+}
+```
+
+#### 3. 技能调用协议
+
+```python
+# 标准技能接口
+class SkillInterface:
+    """所有技能必须实现的接口"""
+    
+    @property
+    def name(self) -> str:
+        """技能唯一标识名"""
+        pass
+    
+    @property
+    def description(self) -> str:
+        """技能功能描述（用于LLM路由）"""
+        pass
+    
+    def can_handle(self, intent: str) -> bool:
+        """判断是否可以处理该意图"""
+        pass
+    
+    def execute(self, input_data: dict) -> dict:
+        """执行技能逻辑"""
+        pass
+```
+
+#### 4. 数据流转规范
+
+```
+用户输入 → 意图识别(NLP) → 技能路由 → 参数提取 → 技能执行 → 结果格式化 → 返回用户
+```
+
+#### 5. 技能间协作
+
+```python
+# 技能可以链式调用
+workflow = [
+    {"skill": "srm-procurement-requirement-parser", "input": "user_request"},
+    {"skill": "srm-ecommerce-procurement-research", "input": "bom_output"},
+    {"skill": "srm-supplier-risk-assessor", "input": "csv_suppliers"},
+    {"skill": "srm-contract-generator", "input": "selected_supplier"},
+]
+```
+
+---
+
+## 🏗️ 技术架构
+
+### 技术栈
+
+| 类别 | 技术选型 |
+|------|----------|
+| **编程语言** | Python 3.10+ |
+| **数据抓取** | Playwright（动态网页）、Jina Reader API（静态网页） |
+| **数据处理** | Pandas、NumPy |
+| **LLM调用** | OpenAI API / 智谱AI / 通义千问 |
+| **API框架** | FastAPI（可选） |
+| **企业集成** | 飞书SDK、企业微信SDK、钉钉SDK |
+| **国内数据源** | 天眼查API、企查查API、裁判文书网 |
+| **发票查验** | 国家税务总局发票查验平台 |
+
 ---
 
 ## 一、平台集成
@@ -585,4 +814,201 @@ IM机器人(@询价) → 多平台比价 → 轻量风控 → 快速合同 → I
 
 ---
 
-*持续更新中...*
+## 九、开发者指南
+
+### 开发新技能
+
+#### 1. 创建技能目录
+
+```bash
+mkdir -p skills/srm-{your-skill-name}
+cd skills/srm-{your-skill-name}
+```
+
+#### 2. 必需文件
+
+```
+skills/srm-your-skill/
+├── __init__.py          # 技能入口
+├── {skill_name}.py      # 核心逻辑
+└── SKILL.md             # 技能说明（AI智能体调用协议）
+```
+
+#### 3. SKILL.md 模板
+
+```markdown
+---
+name: your-skill-name
+description: Use when [触发条件描述]
+---
+
+# Your Skill Name
+
+## Overview
+
+[技能功能概述]
+
+## When to Use
+
+**触发条件：**
+- [条件1]
+- [条件2]
+
+**不适用：**
+- [不适用场景]
+
+## Input / Output
+
+| 输入 | 输出 |
+|------|------|
+| [输入描述] | [输出描述] |
+
+## Example
+
+```python
+from skills.srm_your_skill import YourSkill
+
+skill = YourSkill()
+result = skill.execute({"key": "value"})
+```
+```
+
+#### 4. Python 实现模板
+
+```python
+# skills/srm-your-skill/__init__.py
+from .your_skill import YourSkill
+
+__all__ = ["YourSkill"]
+```
+
+```python
+# skills/srm-your-skill/your_skill.py
+
+class YourSkill:
+    """技能功能描述"""
+    
+    name = "your-skill-name"
+    description = "Use when..."
+    
+    def __init__(self):
+        # 初始化配置
+        pass
+    
+    def can_handle(self, intent: str) -> bool:
+        """判断是否可以处理该意图"""
+        keywords = ["关键词1", "关键词2"]
+        return any(kw in intent for kw in keywords)
+    
+    def execute(self, input_data: dict) -> dict:
+        """执行技能逻辑"""
+        # 验证输入
+        self._validate_input(input_data)
+        
+        # 执行业务逻辑
+        result = self._process(input_data)
+        
+        # 返回结果
+        return {
+            "status": "success",
+            "data": result,
+            "message": "处理完成"
+        }
+    
+    def _validate_input(self, input_data: dict):
+        """验证输入数据"""
+        required_fields = ["field1", "field2"]
+        for field in required_fields:
+            if field not in input_data:
+                raise ValueError(f"缺少必需字段: {field}")
+    
+    def _process(self, input_data: dict) -> dict:
+        """核心业务逻辑"""
+        pass
+```
+
+### 测试技能
+
+```python
+# tests/test_your_skill.py
+import pytest
+from skills.srm_your_skill import YourSkill
+
+def test_your_skill():
+    skill = YourSkill()
+    
+    # 测试 can_handle
+    assert skill.can_handle("关键词1") == True
+    assert skill.can_handle("无关内容") == False
+    
+    # 测试 execute
+    result = skill.execute({"field1": "value1", "field2": "value2"})
+    assert result["status"] == "success"
+```
+
+---
+
+## 十、贡献指南
+
+### 提交 Issue
+
+- 使用清晰的标题描述问题
+- 提供复现步骤
+- 附上错误日志和截图
+- 标明环境和版本信息
+
+### 提交 Pull Request
+
+1. Fork 本仓库
+2. 创建功能分支：`git checkout -b feature/your-feature`
+3. 提交更改：`git commit -am 'Add some feature'`
+4. 推送分支：`git push origin feature/your-feature`
+5. 创建 Pull Request
+
+### 代码规范
+
+- 遵循 PEP 8 编码规范
+- 使用类型注解
+- 编写文档字符串
+- 添加单元测试
+
+---
+
+## 十一、路线图
+
+### 近期计划 (v1.x)
+- [ ] 完善现有技能的错误处理和边界情况
+- [ ] 添加更多单元测试和集成测试
+- [ ] 优化数据抓取性能和稳定性
+- [ ] 完善文档和示例代码
+
+### 中期计划 (v2.0)
+- [ ] 引入工作流引擎，支持复杂流程编排
+- [ ] 添加Web管理界面
+- [ ] 支持更多企业IM平台（Slack、Teams）
+- [ ] 引入向量数据库，支持RAG增强
+
+### 长期愿景
+- [ ] 构建技能市场，支持第三方技能插件
+- [ ] 多智能体协作框架
+- [ ] 支持私有化部署和混合云架构
+
+---
+
+## 十二、许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+---
+
+## 十三、致谢
+
+感谢以下开源项目和技术：
+- [Playwright](https://playwright.dev/) - 浏览器自动化
+- [Jina AI](https://jina.ai/) - 网页内容提取
+- [OpenAI](https://openai.com/) - 大语言模型
+- [智谱AI](https://www.zhipuai.cn/) - 国产大模型
+
+---
+
+*持续更新中... 最后更新时间：2025年3月*

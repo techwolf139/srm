@@ -1,0 +1,1 @@
+../srm-feishu-docs-bridge/template_generator.py

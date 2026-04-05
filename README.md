@@ -1012,3 +1012,24 @@ def test_your_skill():
 ---
 
 *持续更新中... 最后更新时间：2025年3月*
+
+---
+
+## 十一、开发者指南
+
+### 运行测试
+
+```bash
+# 安装测试依赖
+pip install -r requirements-test.txt
+
+# 运行测试
+pytest
+
+# 查看覆盖率
+pytest --cov
+
+# 生成 HTML 报告
+pytest --cov --cov-report=html
+open htmlcov/index.html
+```

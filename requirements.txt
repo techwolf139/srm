@@ -1,0 +1,25 @@
+# SRM 智能体系统核心依赖
+
+# 数据处理
+pandas>=2.0.0
+
+# 文档处理
+openpyxl>=3.1.0
+python-docx>=0.8.11
+markdown>=3.5.0
+
+# 数据抓取
+playwright>=1.40.0
+
+# API 客户端
+requests>=2.31.0
+lark>=1.2.0
+
+# 工具库
+python-dateutil>=2.8.2
+Pillow>=10.0.0
+
+# LLM API (未来使用，当前注释)
+# openai>=1.0.0
+# zhipuai>=2.0.0
+# dashscope>=1.0.0

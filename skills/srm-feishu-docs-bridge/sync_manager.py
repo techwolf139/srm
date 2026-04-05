@@ -1,5 +1,6 @@
 """文档同步管理器"""
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
@@ -7,6 +8,9 @@ from typing import Optional, List, Dict, Any
 from .client import FeishuClient, FeishuAPIError
 from .models import DocumentMetadata, DocumentChain, DocType, DocStatus
 from .config import FeishuConfig
+
+# 配置日志记录
+logger = logging.getLogger(__name__)
 
 
 class DocumentSyncManager:
@@ -140,8 +144,9 @@ class DocumentSyncManager:
 """
         try:
             self.client.add_comment(contract_doc_id, comment_content)
-        except FeishuAPIError:
-            pass
+        except FeishuAPIError as e:
+            logger.warning(f"添加审核评论失败：{e}")
+            return
 
     def _link_documents(self, source_doc_id: str, target_doc_id: str) -> None:
         """建立文档关联关系"""
